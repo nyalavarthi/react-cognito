@@ -1,0 +1,289 @@
+Parameters:
+  PipelineName:
+    Description: Preferred codepipeline name
+    Type: String
+    Default: sample-pipeline
+  Environment:
+    Description: Environment name
+    Type: String
+    Default: dev
+  GitHubOAuthToken:
+    Description: OAuth token used by AWS CodePipeline to connect to GitHub
+    Type: String
+    NoEcho: true
+    AllowedPattern: '[A-Za-z0-9_]*'
+  GitHubOwner:
+    Type: String
+    Default: aws-wwps-dev
+    AllowedPattern: "[A-Za-z0-9-]+"
+  GitHubRepo:
+    Type: String
+    Default: sample-pipeline
+    AllowedPattern: "[A-Za-z0-9-]+"
+  GitHubBranch:
+    Type: String
+    Default: main
+    AllowedPattern: "[A-Za-z0-9-]+"
+  SNSTopicName:
+    Description: Pipeline notification topic name
+    Type: String
+    Default: SamplePipeline
+  EmailForNotifications:
+    Description: The email that will receive pipeline notifications
+    Type: String
+    Default: youremail@domain.com
+
+Resources:
+  # SNS Topic to receive notifications from the pipeline
+  rPipelineNotificationsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref EmailForNotifications
+          Protocol: email
+      KmsMasterKeyId: alias/aws/sns
+      TopicName: !Ref SNSTopicName
+
+  # SNS Topic Policy to allow CloudWatch Event Service to send notifications to the topic
+  rPipelineNotificationsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: !Ref AWS::StackName
+        Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: events.amazonaws.com
+          Resource:
+            - !Ref rPipelineNotificationsTopic
+          Action:
+            - sns:Publish
+      Topics:
+        - !Ref rPipelineNotificationsTopic
+
+  # The artifacts S3 bucket to hold pipeline artifacts
+  rArtifactBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${PipelineName}-artifacts-${AWS::Region}-${AWS::AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 365 # Delete old artifacts from S3 after 1 year to save costs
+            Status: Enabled
+
+  # The artifacts bucket S3 policy to allow CodePipeline's source stage to upload artifacts
+  rArtifactBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref rArtifactBucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:PutObject
+              - s3:GetBucketPolicy
+              - s3:GetObject
+              - s3:ListBucket
+            Effect: Allow
+            Resource:
+              - !Sub arn:${AWS::Partition}:s3:::${rArtifactBucket}
+              - !Sub arn:${AWS::Partition}:s3:::${rArtifactBucket}/*
+            Principal:
+              AWS:
+                - !Ref AWS::AccountId
+
+  # The AWS IAM role to be assumed by CodePipeline
+  rPipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${PipelineName}-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub ${PipelineName}-role-permissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Effect: Allow
+                Resource: '*'
+              - Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                  - s3:GetObjectVersion
+                  - s3:ListBucket
+                  - s3:GetBucketPolicy
+                Effect: Allow
+                Resource:
+                  - !Sub arn:${AWS::Partition}:s3:::${rArtifactBucket}
+                  - !Sub arn:${AWS::Partition}:s3:::${rArtifactBucket}/*
+              - Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                Effect: Allow
+                Resource:
+                    - !GetAtt rSampleEnvDeployProject.Arn
+
+  rDeployerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${PipelineName}-deployer-role 
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        # The deployer role needs permissions to deploy CDK stacks and all actions those stacks are performing
+        - !Ref rPolicyDeployer
+
+  rPolicyDeployer:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Allows CodePipeline to create resources required for sample app deployment
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - events:*
+              - states:*
+              - apigateway:*
+              - lambda:*
+              - s3:*
+              - ssm:*
+              - codebuild:*
+              - cloudformation:*
+              - elasticbeanstalk:*
+              - cognito:*
+              - iam:*
+              #- ecr:*
+              - ec2:*
+              - sts:*
+            Effect: Allow
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:DescribeLogStreams
+              - logs:PutLogEvents
+              - logs:CreateLogGroup
+              - logs:DeleteLogGroup
+              - logs:DeleteLogStream
+            Resource:
+              - !Sub 'arn:${AWS::Partition}:logs:*:${AWS::AccountId}:log-group:/aws/*'
+              - !Sub 'arn:${AWS::Partition}:logs:*:${AWS::AccountId}:log-group:/aws/*:log-stream:*'
+
+  rPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: !Ref PipelineName
+      RoleArn: !GetAtt rPipelineRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref rArtifactBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: Source
+              RunOrder: 1
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                OAuthToken: !Ref GitHubOAuthToken
+                Owner: !Ref GitHubOwner
+                Repo: !Ref GitHubRepo
+                Branch: !Ref GitHubBranch
+                PollForSourceChanges: false
+              OutputArtifacts:
+                - Name: SourceArtifact
+
+        - Name: Build
+          Actions:
+            - Name: Build
+              RunOrder: 1
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: !Ref rSampleEnvDeployProject
+              InputArtifacts:
+                - Name: SourceArtifact
+
+  # CodeBuild project to run all wsx CDK stacks
+  rSampleEnvDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: ./cicd/buildspec.yml
+      Environment:
+        ComputeType: BUILD_GENERAL1_LARGE
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:4.0
+        EnvironmentVariables:
+          - Name: ENV_NAME
+            Value: !Ref Environment
+      ServiceRole: !GetAtt rDeployerRole.Arn
+      Cache:
+        # Use local caching to cache dirs specified in buildspec.yml (i.e., the node_modules dirs)
+        # See https://docs.aws.amazon.com/codebuild/latest/userguide/build-caching.html for various build caching options
+        Type: LOCAL
+        Modes:
+          - LOCAL_SOURCE_CACHE
+          - LOCAL_CUSTOM_CACHE
+
+
+  # CloudWatch event rule to notify SNS topic whenever there is a failure in AWS CodePipeline
+  rPipelineFailuresRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: !Sub CloudWatch event rule to notify SNS topic in case of AWS CodePipeline failures for ${PipelineName} ${Environment}
+      EventPattern:
+        source:
+          - aws.codepipeline
+        detail-type:
+          - CodePipeline Pipeline Execution State Change
+        detail:
+          state:
+            - FAILED
+          pipeline:
+            - !Ref rPipeline
+      State: ENABLED
+      Targets:
+        - Id: PipelineNotificationsTopic
+          Arn: !Ref rPipelineNotificationsTopic
+          InputTransformer:
+            InputPathsMap:
+              pipeline: '$.detail.pipeline'
+            InputTemplate: '{"The Pipeline has failed.":<pipeline>}'
+
+Outputs:
+  AppPipelineName: { Value: !Ref rPipeline }
+  PipelineNotificationsTopic: { Value: !Ref rPipelineNotificationsTopic }

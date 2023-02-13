@@ -1,0 +1,45 @@
+version: 0.2
+
+phases:
+  install:
+    # See supported runtimes at https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
+    runtime-versions:
+      nodejs: 16
+
+  pre_build:
+    commands:
+      - echo "Installing dependencies"
+      - pwd
+      - ls
+      - rm -rf node_modules
+      - rm -f package-lock.json
+      - npm cache clean --force
+      
+      - npm install -g aws-cdk
+      - printf "\n\n"
+
+  build:
+    commands:
+      - echo "Installing ebs-infra"
+      - pwd
+      - pushd ./ebs-infra/src/cdk
+      - pwd
+      - npm install aws-cdk-lib
+      - cdk bootstrap
+      - cdk deploy --require-approval never
+      - printf "\n\n"
+
+      - echo "Installing cognito"
+      - cd ../../../ # for some reason popd throws error on build server
+      - pwd
+      - pushd ./cognito-infra/src
+      - pwd
+      - npm install aws-cdk-lib
+      - cdk deploy CognitoStack --require-approval never
+      - printf "\n\n"
+
+cache:
+  paths:
+    - node_modules/
+    - cognito-infra/*/node_modules/
+    - eds-infra/*/node_modules/
