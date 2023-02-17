@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { CognitoStack } from "./../../../../cognito-infra/src/cdk/lib/cognito-stack";
+import { CdkEbInfraStack } from "../lib/ebs-stack";
 import * as config from "../../../../environment-config";
 
 const app = new cdk.App();
 
-new CognitoStack(app, "EBSStack", {
+new CdkEbInfraStack(app, "EBSStack", {
     env: config.env
   })
   
