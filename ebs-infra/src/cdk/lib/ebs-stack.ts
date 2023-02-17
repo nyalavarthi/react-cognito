@@ -8,8 +8,11 @@ export class CdkEbInfraStack extends cdk.Stack {
     super(scope, id, props);
 
     // Construct an S3 asset from the ZIP located from directory up.
+    console.log('__dirname ', __dirname)
     const directory = `${__dirname}/../../../../web`;
+    console.log('directory : ', directory)
     const output = `${__dirname}/../app.zip`;
+    console.log('output : ', output)
     const archive = archiver('zip', { zlib: { level: 9 } });
     const stream = createWriteStream(output);
     
