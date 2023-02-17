@@ -15,14 +15,18 @@ export class CdkEbInfraStack extends cdk.Stack {
     console.log('output : ', output)
     const archive = archiver('zip', { zlib: { level: 9 } });
     const stream = createWriteStream(output);
-    
+
+    console.log('stream : ', stream)
     archive.pipe(stream);
     archive.directory(directory, false);
     archive.finalize();
+    
+    console.log('archive : ', archive)
 
     const webAppZipArchive = new cdk.aws_s3_assets.Asset(this, 'WebZip', {
       path: `${__dirname}/../app.zip`,
     });
+    console.log('webAppZipArchive : ', webAppZipArchive)
     // Create a ElasticBeanStalk app.
     const appName = 'WebApp';
     const app = new cdk.aws_elasticbeanstalk.CfnApplication(this, 'WebApp', {
