@@ -9,7 +9,7 @@ export class CdkEbInfraStack extends cdk.Stack {
 
     // Construct an S3 asset from the ZIP located from directory up.
     console.log('__dirname ', __dirname)
-    const directory = `${__dirname}/../../../../web`;
+    const directory = `${__dirname}/../../../web`;
     console.log('directory : ', directory)
     const output = `${__dirname}/../app.zip`;
     console.log('output : ', output)
