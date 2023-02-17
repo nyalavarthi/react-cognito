@@ -16,7 +16,6 @@ export class CdkEbInfraStack extends cdk.Stack {
     const archive = archiver('zip', { zlib: { level: 9 } });
     const stream = createWriteStream(output);
 
-    console.log('stream : ', stream)
     archive.pipe(stream);
     archive.directory(directory, false);
     archive.finalize();
