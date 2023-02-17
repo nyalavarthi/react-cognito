@@ -14,7 +14,7 @@ Parameters:
     AllowedPattern: '[A-Za-z0-9_]*'
   GitHubOwner:
     Type: String
-    Default: aws-wwps-dev
+    Default: username
     AllowedPattern: "[A-Za-z0-9-]+"
   GitHubRepo:
     Type: String
