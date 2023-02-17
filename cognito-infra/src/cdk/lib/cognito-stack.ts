@@ -1,9 +1,5 @@
 import * as cognito from 'aws-cdk-lib/aws-cognito';
-import { ICertificate } from "@aws-cdk/aws-certificatemanager";
-import * as route53 from "@aws-cdk/aws-route53";
-import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from 'aws-cdk-lib';
-const fs = require('fs');
 import { CLIENT_URL } from "../../../../environment-config";
 import { COGNITO_USER_POOL_NAME } from "../../../../environment-config";
 import { COGNITO_DOMAIN_NAME } from "../../../../environment-config";

@@ -32,7 +32,7 @@ phases:
       - echo "Installing cognito"
       - cd ../../../ # for some reason popd throws error on build server
       - pwd
-      - pushd ./cognito-infra/src
+      - pushd ./cognito-infra/src/cdk
       - pwd
       - npm install aws-cdk-lib
       - cdk deploy CognitoStack --require-approval never
