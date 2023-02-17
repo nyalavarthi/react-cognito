@@ -20,9 +20,7 @@ export class CdkEbInfraStack extends cdk.Stack {
     archive.pipe(stream);
     archive.directory(directory, false);
     archive.finalize();
-    
-    console.log('archive : ', archive)
-
+ 
     const webAppZipArchive = new cdk.aws_s3_assets.Asset(this, 'WebZip', {
       path: `${__dirname}/../app.zip`,
     });
