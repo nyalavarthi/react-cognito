@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 import NavMenu from './components/nav/menu'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import UserStore from './UserStore';
 import CognitoAuthService from './services/cognitoService'
 import apiConfig from './config/app-config.json'
 
@@ -11,9 +10,7 @@ import apiConfig from './config/app-config.json'
 const service = new CognitoAuthService()
 
 function App() {
-  //const setUser = UserStore((state) => state.setUser);
   const [userData, setUserData] = React.useState({});
-
 
   useEffect(() => {
     service.getCurrentUser().then((result) => {
