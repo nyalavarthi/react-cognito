@@ -192,7 +192,7 @@ export class CdkEbInfraStack extends cdk.Stack {
             {
                 namespace: "aws:elbv2:listener:443",
                 optionName: "SSLCertificateArns",
-                value: cert. cert.certificateArn,
+                value: cert.certificateArn,
             },
             {
                 namespace: "aws:ec2:vpc",
