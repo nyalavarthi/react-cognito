@@ -235,7 +235,7 @@ export class CdkEbInfraStack extends cdk.Stack {
            //Create A Record Custom Domain to CloudFront CDN
            new route53.ARecord(this, "SiteRecord", {
             recordName: config.HOST_NAME,
-            target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(ebEnv.attrEndpointUrl)),
+            target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(ebEnv)),
             zone
         });
 
