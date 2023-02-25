@@ -134,7 +134,7 @@ export class CdkEbInfraStack extends cdk.Stack {
             {
                 namespace: "aws:elb:listener:443",
                 optionName: "InstancePort",
-                value: "442"
+                value: "443"
             },
             {
                 namespace: "aws:elb:listener:80",
@@ -192,7 +192,7 @@ export class CdkEbInfraStack extends cdk.Stack {
                 value: "false"
             },
             {
-                namespace: "aws:elbv2:listener:443",
+                namespace: "aws:elb:listener:443",
                 optionName: "SSLCertificateArns",
                 value: cert.certificateArn,
             },
@@ -230,6 +230,15 @@ export class CdkEbInfraStack extends cdk.Stack {
             optionSettings: optionSettingProperties,
             versionLabel: appVersionProps.ref,
         });
+
+
+           //Create A Record Custom Domain to CloudFront CDN
+           new route53.ARecord(this, "SiteRecord", {
+            recordName: config.HOST_NAME,
+            target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(ebEnv.attrEndpointUrl)),
+            zone
+        });
+
 
         // Add a Route 53 alias with the Load Balancer as the target
         // CDK doesn't support this feature
