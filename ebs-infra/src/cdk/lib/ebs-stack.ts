@@ -232,12 +232,15 @@ export class CdkEbInfraStack extends cdk.Stack {
         });
 
         // Add a Route 53 alias with the Load Balancer as the target
+        // CDK doesn't support this feature
+        /*
         new route53.ARecord(this, "AliasRecord", {
             zone: zone,
             target: route53.RecordTarget.fromAlias(
             new route53targets.ElasticBeanstalkEnvironmentEndpointTarget(ebEnv.attrEndpointUrl)
             ),
         });
+        */
 
         // Outputs
         new cdk.CfnOutput(this, 'eb-env-endpoint-export', {
