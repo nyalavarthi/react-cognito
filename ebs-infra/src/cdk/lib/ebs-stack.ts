@@ -4,6 +4,8 @@ import archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as route53 from "aws-cdk-lib/aws-route53";
+import * as route53targets from "aws-cdk-lib/aws-route53-targets";
+
 
 export class CdkEbInfraStack extends cdk.Stack {
     constructor(scope: cdk.App, id: string, props: cdk.StackProps) {
@@ -227,6 +229,14 @@ export class CdkEbInfraStack extends cdk.Stack {
             solutionStackName: '64bit Amazon Linux 2 v5.6.4 running Node.js 16',
             optionSettings: optionSettingProperties,
             versionLabel: appVersionProps.ref,
+        });
+
+        // Add a Route 53 alias with the Load Balancer as the target
+        new route53.ARecord(this, "AliasRecord", {
+            zone: zone,
+            target: route53.RecordTarget.fromAlias(
+            new route53targets.ElasticBeanstalkEnvironmentEndpointTarget(ebEnv.attrEndpointUrl)
+            ),
         });
 
         // Outputs

@@ -1,6 +1,6 @@
 
 export const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000/";
-export const HOST_NAME = "react-cognito.sample-domain.com"
+export const HOST_NAME = "nyreactapp.us"
 //private sub for ebs
 export const PRIVATE_SUB1 = "subnet-42282b0f"
 export const PRIVATE_SUB2 = "subnet-f483fdd5"
