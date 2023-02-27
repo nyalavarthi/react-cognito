@@ -29,7 +29,7 @@ export class CdkEbInfraStack extends cdk.Stack {
         });
         console.log('webAppZipArchive : ', webAppZipArchive)
         // Create a ElasticBeanStalk app.
-        const appName = 'WebApp3';
+        const appName = 'WebApp4';
         const app = new cdk.aws_elasticbeanstalk.CfnApplication(this, 'WebApp', {
             applicationName: appName,
         });
