@@ -128,13 +128,8 @@ export class CdkEbInfraStack extends cdk.Stack {
             },
             {
                 namespace: "aws:elb:listener:443",
-                optionName: "ListenerProtocol",
-                value: "HTTPS"
-            },
-            {
-                namespace: "aws:elb:listener:443",
                 optionName: "InstancePort",
-                value: "443"
+                value: "80"
             },
             {
                 namespace: "aws:elb:listener:80",
@@ -144,7 +139,7 @@ export class CdkEbInfraStack extends cdk.Stack {
             {
                 namespace: "aws:elb:listener:443",
                 optionName: "InstanceProtocol",
-                value: "HTTPS"
+                value: "HTTP"
             },
             {
                 namespace: "aws:elb:listener:80",
@@ -174,7 +169,7 @@ export class CdkEbInfraStack extends cdk.Stack {
             {
                 namespace: "aws:elb:loadbalancer",
                 optionName: "LoadBalancerHTTPSPort",
-                value: "443"
+                value: "OFF"
             },
             {
                 namespace: "aws:elb:loadbalancer",
@@ -190,11 +185,6 @@ export class CdkEbInfraStack extends cdk.Stack {
                 namespace: "aws:elb:policies",
                 optionName: "ConnectionDrainingEnabled",
                 value: "false"
-            },
-            {
-                namespace: "aws:elb:listener:443",
-                optionName: "SSLCertificateArns",
-                value: cert.certificateArn,
             },
             {
                 namespace: "aws:ec2:vpc",
@@ -222,6 +212,7 @@ export class CdkEbInfraStack extends cdk.Stack {
                 value: "public"
             }
         ];
+
         // Create an Elastic Beanstalk environment to run the application
         const ebEnv = new cdk.aws_elasticbeanstalk.CfnEnvironment(this, 'Environment', {
             environmentName: `${appName}-env`,
