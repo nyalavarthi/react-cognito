@@ -231,13 +231,14 @@ export class CdkEbInfraStack extends cdk.Stack {
             versionLabel: appVersionProps.ref,
         });
 
-
-           //Create A Record Custom Domain to CloudFront CDN
-           new route53.ARecord(this, "SiteRecord", {
+        /*
+        //Create A Record Custom Domain to CloudFront CDN
+        new route53.ARecord(this, "SiteRecord", {
             recordName: config.HOST_NAME,
             target: route53.RecordTarget.fromAlias(new route53targets.ElasticBeanstalkEnvironmentEndpointTarget(ebEnv.attrEndpointUrl)),
             zone
         });
+        */
 
 
         // Add a Route 53 alias with the Load Balancer as the target
