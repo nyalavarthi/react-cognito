@@ -70,11 +70,21 @@ export class CdkEbInfraStack extends cdk.Stack {
 
         //Create CloudFront Distribution
         const siteDistribution = new cloudfront.CloudFrontWebDistribution(this, "SiteDistribution", {
+            /*
             aliasConfiguration: {
                 acmCertRef: cert.certificateArn,
                 names: [config.HOST_NAME],
-                securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019
-            },
+                securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
+                sslMethod: cloudfront.SSLMethod.SNI,
+            },*/
+            viewerCertificate: cloudfront.ViewerCertificate.fromIamCertificate(
+                'certificateId',
+                {
+                    aliases: [config.HOST_NAME],
+                    securityPolicy: cloudfront.SecurityPolicyProtocol.SSL_V3, // default
+                    sslMethod: cloudfront.SSLMethod.SNI, // default
+                },
+            ),
             originConfigs: [{
                 customOriginSource: {
                     domainName: siteBucket.bucketWebsiteDomainName,
@@ -95,10 +105,6 @@ export class CdkEbInfraStack extends cdk.Stack {
         });
 
 
-        // Outputs
-        new cdk.CfnOutput(this, 'eb-env-endpoint-export', {
-            exportName: 'eb-env-endpoint-url',
-            //value: ebEnv.attrEndpointUrl
-        });
+
     }
 }
