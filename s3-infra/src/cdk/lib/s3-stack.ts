@@ -7,7 +7,7 @@ import * as route53 from "aws-cdk-lib/aws-route53";
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
-
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 export class CdkEbInfraStack extends cdk.Stack {
     constructor(scope: cdk.App, id: string, props: cdk.StackProps) {
@@ -67,6 +67,14 @@ export class CdkEbInfraStack extends cdk.Stack {
             validation: acm.CertificateValidation.fromDns(zone),
         });
 
+        const myViewerCertificate = cloudfront.ViewerCertificate.fromAcmCertificate(
+            cert,
+            {
+              aliases: ['my-alias.example.com'], // Replace with your own domain aliases
+              securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
+              sslMethod: cloudfront.SSLMethod.SNI,
+            },
+          );
 
         //Create CloudFront Distribution
         const siteDistribution = new cloudfront.CloudFrontWebDistribution(this, "SiteDistribution", {
@@ -77,14 +85,7 @@ export class CdkEbInfraStack extends cdk.Stack {
                 securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
                 sslMethod: cloudfront.SSLMethod.SNI,
             },*/
-            viewerCertificate: cloudfront.ViewerCertificate.fromIamCertificate(
-                "3759bc0e-f497-4d94-9c00-adb5448c4fb7",
-                {
-                    aliases: [config.HOST_NAME],
-                    securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019
-                    //sslMethod: cloudfront.SSLMethod.SNI, // default
-                },
-            ),
+            viewerCertificate: myViewerCertificate,
             originConfigs: [{
                 customOriginSource: {
                     domainName: siteBucket.bucketWebsiteDomainName,
@@ -104,7 +105,7 @@ export class CdkEbInfraStack extends cdk.Stack {
             zone
         });
 
-
+        
 
     }
 }
