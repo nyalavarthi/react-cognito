@@ -20,6 +20,10 @@ phases:
 
   build:
     commands:
+      - echo "build web project"
+      - pwd
+      - pushd ./web
+      - npm build
       - echo "Installing s3-infra"
       - pwd
       - pushd ./s3-infra/src/cdk

@@ -1,67 +1,36 @@
 import * as cdk from 'aws-cdk-lib';
 import * as config from "../../../../environment-config";
-import archiver from 'archiver';
-import { createWriteStream } from 'fs';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as deploy from '@aws-cdk/aws-s3-deployment';
 
 export class CdkEbInfraStack extends cdk.Stack {
     constructor(scope: cdk.App, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
-        // Construct an S3 asset from the ZIP located from directory up.
-        console.log('__dirname ', __dirname)
-        const directory = `${__dirname}/../../../../web`;
-        console.log('directory : ', directory)
-        const output = `${__dirname}/../app.zip`;
-        console.log('output : ', output)
-        const archive = archiver('zip', { zlib: { level: 9 } });
-        const stream = createWriteStream(output);
-
-        archive.pipe(stream);
-        archive.directory(directory, false);
-        archive.finalize();
-
-        const webAppZipArchive = new cdk.aws_s3_assets.Asset(this, 'WebZip', {
-            path: `${__dirname}/../app.zip`,
-        });
-        console.log('webAppZipArchive : ', webAppZipArchive)
-        // Create a ElasticBeanStalk app.
-        const appName = 'WebApp3';
-        const app = new cdk.aws_elasticbeanstalk.CfnApplication(this, 'WebApp', {
-            applicationName: appName,
-        });
-        // Create an app version from the S3 asset defined earlier
-        const appVersionProps = new cdk.aws_elasticbeanstalk.CfnApplicationVersion(this, 'AppVersion', {
-            applicationName: appName,
-            sourceBundle: {
-                s3Bucket: webAppZipArchive.s3BucketName,
-                s3Key: webAppZipArchive.s3ObjectKey,
-            },
-        });
-        // Make sure that Elastic Beanstalk app exists before creating an app version
-        appVersionProps.addDependsOn(app);
-
         //Create S3 Bucket web hosting
         const siteBucket = new s3.Bucket(this, "SiteBucket", {
-            bucketName: config.HOST_NAME,
-            websiteIndexDocument: "index.html",
-            publicReadAccess: true,
+            websiteIndexDocument: 'index.html',
+            websiteErrorDocument: 'error.html',
             removalPolicy: cdk.RemovalPolicy.DESTROY
         })
 
         const bucketPolicy = new iam.PolicyStatement({
-            effect : iam.Effect.ALLOW,
+            effect: iam.Effect.ALLOW,
             actions: ['s3:PutObject'],
             resources: [siteBucket.bucketArn + '/*'],
             principals: [new iam.AnyPrincipal()]
         })
+        //siteBucket.addToResourcePolicy(bucketPolicy)
+        // Create a CloudFront Origin Access Identity (OAI)
+        const oai = new cloudfront.OriginAccessIdentity(scope, 'MyOAI');
 
-        siteBucket.addToResourcePolicy(bucketPolicy)
+        // Grant the OAI access to the S3 bucket
+        siteBucket.grantRead(oai);
 
 
         // Create the Route 53 Hosted Zone
@@ -79,24 +48,25 @@ export class CdkEbInfraStack extends cdk.Stack {
         const myViewerCertificate = cloudfront.ViewerCertificate.fromAcmCertificate(
             cert,
             {
-              aliases: ['my-alias.example.com'], // Replace with your own domain aliases
-              securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
-              sslMethod: cloudfront.SSLMethod.SNI,
+                aliases: ['my-alias.example.com'], // Replace with your own domain aliases
+                securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
+                sslMethod: cloudfront.SSLMethod.SNI,
             },
-          );
+        );
 
         //Create CloudFront Distribution
         const siteDistribution = new cloudfront.CloudFrontWebDistribution(this, "SiteDistribution", {
             viewerCertificate: myViewerCertificate,
-            originConfigs: [{
-                customOriginSource: {
-                    domainName: siteBucket.bucketWebsiteDomainName,
-                    originProtocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY
-                },
-                behaviors: [{
-                    isDefaultBehavior: true
+            originConfigs: [
+                {
+                    s3OriginSource: {
+                        s3BucketSource: siteBucket,
+                        originAccessIdentity: oai,
+                    },
+                    behaviors: [{
+                        isDefaultBehavior: true
+                    }]
                 }]
-            }]
         });
 
 
@@ -107,7 +77,20 @@ export class CdkEbInfraStack extends cdk.Stack {
             zone
         });
 
-        
+        //Deploy site to s3
+        new deploy.BucketDeployment(this, "Deployment", {
+            sources: [deploy.Source.asset("./build")],
+            destinationBucket: siteBucket,
+            distribution: siteDistribution,
+            distributionPaths: ["/*"]
+
+        });
+
+
+        // Output the CloudFront distribution domain name
+        new cdk.CfnOutput(scope, 'DistributionDomainName', {
+            value: siteDistribution.distributionDomainName,
+        });
 
     }
 }
