@@ -78,7 +78,7 @@ export class CdkEbInfraStack extends cdk.Stack {
                 sslMethod: cloudfront.SSLMethod.SNI,
             },*/
             viewerCertificate: cloudfront.ViewerCertificate.fromIamCertificate(
-                cert,
+                "Certificate",
                 {
                     aliases: [config.HOST_NAME],
                     securityPolicy: cloudfront.SecurityPolicyProtocol.SSL_V3, // default
