@@ -79,7 +79,7 @@ export class CdkEbInfraStack extends cdk.Stack {
 
         //Deploy site to s3
         new deploy.BucketDeployment(this, "Deployment", {
-            sources: [deploy.Source.asset("./../../../../web/build")],
+            sources: [deploy.Source.asset("./../../../web/build")],
             destinationBucket: siteBucket,
             distribution: siteDistribution,
             distributionPaths: ["/*"]
