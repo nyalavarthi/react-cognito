@@ -27,7 +27,7 @@ export class CdkEbInfraStack extends cdk.Stack {
         })
         //siteBucket.addToResourcePolicy(bucketPolicy)
         // Create a CloudFront Origin Access Identity (OAI)
-        const oai = new cloudfront.OriginAccessIdentity(scope, 'MyOAI');
+        const oai = new cloudfront.OriginAccessIdentity(this, 'MyOAI');
 
         // Grant the OAI access to the S3 bucket
         siteBucket.grantRead(oai);
@@ -88,7 +88,7 @@ export class CdkEbInfraStack extends cdk.Stack {
 
 
         // Output the CloudFront distribution domain name
-        new cdk.CfnOutput(scope, 'DistributionDomainName', {
+        new cdk.CfnOutput(this, 'DistributionDomainName', {
             value: siteDistribution.distributionDomainName,
         });
 
