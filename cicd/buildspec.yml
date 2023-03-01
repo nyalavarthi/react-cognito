@@ -20,9 +20,9 @@ phases:
 
   build:
     commands:
-      - echo "Installing ebs-infra"
+      - echo "Installing s3-infra"
       - pwd
-      - pushd ./ebs-infra/src/cdk
+      - pushd ./s3-infra/src/cdk
       - pwd
       - npm install aws-cdk-lib
       - cdk bootstrap
