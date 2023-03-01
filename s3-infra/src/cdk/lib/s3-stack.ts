@@ -54,6 +54,15 @@ export class CdkEbInfraStack extends cdk.Stack {
             removalPolicy: cdk.RemovalPolicy.DESTROY
         })
 
+        const bucketPolicy = new iam.PolicyStatement({
+            effect : iam.Effect.ALLOW,
+            actions: ['s3:PutObject'],
+            resources: [siteBucket.bucketArn + '/*'],
+            principals: [new iam.AnyPrincipal()]
+        })
+
+        siteBucket.addToResourcePolicy(bucketPolicy)
+
 
         // Create the Route 53 Hosted Zone
         const zone = new route53.HostedZone(this, "HostedZone", {
@@ -78,13 +87,6 @@ export class CdkEbInfraStack extends cdk.Stack {
 
         //Create CloudFront Distribution
         const siteDistribution = new cloudfront.CloudFrontWebDistribution(this, "SiteDistribution", {
-            /*
-            aliasConfiguration: {
-                acmCertRef: cert.certificateArn,
-                names: [config.HOST_NAME],
-                securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
-                sslMethod: cloudfront.SSLMethod.SNI,
-            },*/
             viewerCertificate: myViewerCertificate,
             originConfigs: [{
                 customOriginSource: {
