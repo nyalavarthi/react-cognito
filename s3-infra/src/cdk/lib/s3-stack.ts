@@ -6,7 +6,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as deploy from '@aws-cdk/aws-s3-deployment';
+import * as deploy from 'aws-cdk-lib/aws-s3-deployment';
 
 export class CdkEbInfraStack extends cdk.Stack {
     constructor(scope: cdk.App, id: string, props: cdk.StackProps) {
