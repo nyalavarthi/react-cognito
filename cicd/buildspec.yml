@@ -27,6 +27,7 @@ phases:
       - npm run build
       - echo "Installing s3-infra"
       - pwd
+      - pushd ../
       - pushd ./s3-infra/src/cdk
       - pwd
       - npm install aws-cdk-lib
