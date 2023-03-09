@@ -11,7 +11,7 @@ import * as deploy from 'aws-cdk-lib/aws-s3-deployment';
 import { ViewerProtocolPolicy } from 'aws-cdk-lib/aws-cloudfront';
 
 
-export class CdkEbInfraStack extends cdk.Stack {
+export class CdkS3InfraStack extends cdk.Stack {
     constructor(scope: cdk.App, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
@@ -115,7 +115,7 @@ export class CdkEbInfraStack extends cdk.Stack {
 
         // Output the CloudFront distribution domain name
         new cdk.CfnOutput(this, 'DistributionDomainName', {
-            value: siteDistribution.distributionDomainName,
+            value: cloudfrontDistribution.distributionDomainName,
         });
 
     }
