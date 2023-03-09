@@ -48,7 +48,7 @@ export class CdkEbInfraStack extends cdk.Stack {
         const myViewerCertificate = cloudfront.ViewerCertificate.fromAcmCertificate(
             cert,
             {
-                aliases: ['my-alias.example.com'], // Replace with your own domain aliases
+                aliases: [config.HOST_NAME], // Replace with your own domain aliases
                 securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
                 sslMethod: cloudfront.SSLMethod.SNI,
             },
