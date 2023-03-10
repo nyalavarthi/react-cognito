@@ -1,5 +1,6 @@
 
-export const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000/";
+//export const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000/";
+export const CLIENT_URL = process.env.CLIENT_URL || "https://dhfg5x10pdi4c.cloudfront.net/";
 export const HOST_NAME = "nyreactapp.us"
 //private sub for ebs
 export const PRIVATE_SUB1 = "subnet-42282b0f"

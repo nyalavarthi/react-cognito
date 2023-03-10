@@ -1,18 +1,18 @@
 {
     "Auth": {
-      "region": "us-east-2",
-      "userPoolId": "us-east-2_qmxooPsyw",
-      "userPoolWebClientId": "4l6kcg0pmc2aote70gvomrse4s",
-      "webAppDomain" : "sample-domain-showcase.auth.us-east-2.amazoncognito.com",
+      "region": "us-east-1",
+      "userPoolId": "us-east-1_fNB9bzL9h",
+      "userPoolWebClientId": "6kmhhjuq45o1pkt6vrdbtbb320",
+      "webAppDomain" : "sample-domain-showcase.auth.us-east-1.amazoncognito.com",
       "mandatorySignIn": false,
       "cookieStorage": {
-        "domain": "localhost:3000/",
+        "domain": "sample-domain-showcase/",
         "path": "/",
         "expires": 365,
         "secure": true
       },
-      "redirectSignIn": "http://localhost:3000/",
-      "redirectSignOut": "http://localhost:3000/"
+      "redirectSignIn": "https://dhfg5x10pdi4c.cloudfront.net//",
+      "redirectSignOut": "https://dhfg5x10pdi4c.cloudfront.net/"
     },
     "API": {
       "endpoints": [
