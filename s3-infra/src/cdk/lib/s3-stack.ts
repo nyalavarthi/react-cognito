@@ -45,7 +45,9 @@ export class CdkS3InfraStack extends cdk.Stack {
         bucket.addToResourcePolicy(bucketPolicy);
 
         // Deploy React build to S3 bucket
-        const buildPath = path.join(__dirname, '"./../../../web/build');
+        ///codebuild/output/src382816005/src
+        ///codebuild/output/src382816005/src/s3-infra/src/web/build
+        const buildPath = path.join(__dirname, '"./../../../../../web/build');
         // const buildPath = path.join(__dirname, '../build');
         new cdk.CfnOutput(this, 'buildPath', {
             value: buildPath,
