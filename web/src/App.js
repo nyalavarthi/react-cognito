@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import NavMenu from './components/nav/menu'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import CognitoAuthService from './services/cognitoService'
 import apiConfig from './config/app-config.json'
 
@@ -60,12 +58,22 @@ function App() {
         <a
           className="App-link"
           href={apiConfig.LoginURL}
-          //target="_blank"
           rel="noopener noreferrer"
         >
           Login
         </a>
-      : '' }
+      : 
+
+      <a
+          className="App-link"
+          href="#"
+          onClick={service.handleSignOut}
+          rel="noopener noreferrer"
+        >
+          Logout
+        </a>
+      
+      }
       </header>
     </div>
   );

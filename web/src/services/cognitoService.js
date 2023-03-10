@@ -50,8 +50,8 @@ class CognitoAuthService {
         try {
             const authUser = await Auth.currentAuthenticatedUser();
             console.log('authUser: ', authUser);
-            console.log('email: ', authUser.username);
-            console.log('groups: ', authUser.signInUserSession.accessToken.payload['cognito:groups']);
+            //console.log('email: ', authUser.username);
+            //console.log('groups: ', authUser.signInUserSession.accessToken.payload['cognito:groups']);
             return authUser
         } catch (e) {
             console.log('error happened', e);
