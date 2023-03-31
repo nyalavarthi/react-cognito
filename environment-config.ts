@@ -9,8 +9,14 @@ export const PRIVATE_SUB2 = "subnet-f483fdd5"
 export const PUBLIC_SUB1 = "subnet-032f2355177bb1773"
 export const PUBLIC_SUB2 = "subnet-096dc2ede66cf4a21"
 
+export const AZ1 = "us-east-2c"
+export const AZ2 = "us-east-2b"
+
 //Cognito pool
 export const VPC_ID = "vpc-372ea24a"
 export const COGNITO_USER_POOL_NAME = "sample-pool-showcase"
 export const COGNITO_DOMAIN_NAME = "sample-domain-showcase"
 export const env = { account: "718164670125", region: 'us-east-1' };
+export const LOG_LEVEL = 'DEBUG'
+export const API_WAF_NAME = 'sample-api-waf'
+export const BEAKSTALK_SOLUTION = '64bit Amazon Linux 2 v5.7.0 running Node.js 16'

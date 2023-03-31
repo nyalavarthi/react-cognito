@@ -52,28 +52,28 @@ function App() {
 
       <header className="App-header">
         <p>
-          Welcome to Sample ReactJS and Cognito application
+          Hello <b>{userData.attributes ? userData.attributes.given_name : ''} </b> , Welcome to Sample ReactJS and Cognito application
         </p>
         {!userData.attributes ?
-        <a
-          className="App-link"
-          href={apiConfig.LoginURL}
-          rel="noopener noreferrer"
-        >
-          Login
-        </a>
-      : 
+          <a
+            className="App-link"
+            href={apiConfig.LoginURL}
+            rel="noopener noreferrer"
+          >
+            Login
+          </a>
+          :
 
-      <a
-          className="App-link"
-          href="#"
-          onClick={service.handleSignOut}
-          rel="noopener noreferrer"
-        >
-          Logout
-        </a>
-      
-      }
+          <a
+            className="App-link"
+            href="#"
+            onClick={service.handleSignOut}
+            rel="noopener noreferrer"
+          >
+            Logout
+          </a>
+
+        }
       </header>
     </div>
   );

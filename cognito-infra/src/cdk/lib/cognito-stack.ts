@@ -1,15 +1,7 @@
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as cdk from 'aws-cdk-lib';
-import { CLIENT_URL } from "../../../../environment-config";
-import { COGNITO_USER_POOL_NAME } from "../../../../environment-config";
-import { COGNITO_DOMAIN_NAME } from "../../../../environment-config";
+import * as config from "../../../../environment-config";
 
-/*
-export interface AuthenticationProps {
-  rootCertificate: ICertificate,
-  rootHostedZone: route53.IHostedZone,
-  postAuthTrigger: lambda.Function,
-}*/
 
 export class CognitoStack extends cdk.Stack {
 
@@ -18,7 +10,7 @@ export class CognitoStack extends cdk.Stack {
 
     // User Pool
     const userPool = new cognito.UserPool(this, 'userpool', {
-      userPoolName: COGNITO_USER_POOL_NAME,
+      userPoolName: config.COGNITO_USER_POOL_NAME,
       //selfSignUpEnabled: true,
       signInAliases: {
         email: false,
@@ -50,50 +42,27 @@ export class CognitoStack extends cdk.Stack {
       accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
+    //enable 'Audit Only' advanced security feature , this will emt metrics to CW logs ( IMP this feature is not supported in GOV cloud)
+    //const cfnPool = userPool.node.defaultChild as cognito.CfnUserPool;
+    //cfnPool.userPoolAddOns = { advancedSecurityMode: "AUDIT" };
 
-    // yw. why not initialize userPool using these attributes??
-    // User Pool Client attributes
-    const standardCognitoAttributes = {
-      givenName: true,
-      familyName: true,
-      email: true,
-      emailVerified: true,
-      address: true,
-      birthdate: true,
-      gender: true,
-      locale: true,
-      middleName: true,
-      fullname: true,
-      nickname: true,
-      phoneNumber: true,
-      phoneNumberVerified: true,
-      profilePicture: true,
-      preferredUsername: true,
-      profilePage: true,
-      timezone: true,
-      lastUpdateTime: true,
-      website: true,
-    };
 
     const clientReadAttributes = new cognito.ClientAttributes()
-      .withStandardAttributes(standardCognitoAttributes)
       .withCustomAttributes(...['groups']);
 
     const clientWriteAttributes = new cognito.ClientAttributes()
       .withStandardAttributes({
-        ...standardCognitoAttributes,
         emailVerified: false,
         phoneNumberVerified: false,
       })
       .withCustomAttributes(...['groups']);
 
-
     // User Pool Client
     const userPoolClient = new cognito.UserPoolClient(this, 'userpool-client', {
       userPool,
       oAuth: {
-        callbackUrls: [CLIENT_URL],
-        logoutUrls: [CLIENT_URL],
+        callbackUrls: [config.CLIENT_URL],
+        logoutUrls: [config.CLIENT_URL],
         scopes: [cognito.OAuthScope.EMAIL, cognito.OAuthScope.OPENID, cognito.OAuthScope.PROFILE, cognito.OAuthScope.PHONE, cognito.OAuthScope.COGNITO_ADMIN],
       },
       authFlows: {
@@ -107,7 +76,7 @@ export class CognitoStack extends cdk.Stack {
 
     const cognitoDomain = new cognito.UserPoolDomain(this, 'userpool-domain', {
       cognitoDomain: {
-        domainPrefix: COGNITO_DOMAIN_NAME,
+        domainPrefix: config.COGNITO_DOMAIN_NAME,
       },
       userPool: userPool,
     });

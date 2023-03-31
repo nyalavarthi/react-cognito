@@ -210,14 +210,36 @@ export class CdkEbInfraStack extends cdk.Stack {
                 namespace: "aws:ec2:vpc",
                 optionName: "ELBScheme",
                 value: "public"
-            }
+            },
+            // Instance metatadata V2 is required. ( IMDSv2)
+            {
+                namespace: 'aws:autoscaling:launchconfiguration',
+                optionName: 'DisableIMDSv1',
+                value: 'true',
+            },
+            // enable managed updates and patching
+            {
+                namespace: 'aws:elasticbeanstalk:managedactions',
+                optionName: 'ManagedActionsEnabled',
+                value: 'true'
+            },
+            {
+                namespace: 'aws:elasticbeanstalk:managedactions',
+                optionName: 'PreferredStartTime',
+                value: 'Sat:03:00'
+            },
+            {
+                namespace: "aws:elasticbeanstalk:managedactions:platformupdate",
+                optionName: "UpdateLevel",
+                value: "patch"
+            },
         ];
 
         // Create an Elastic Beanstalk environment to run the application
         const ebEnv = new cdk.aws_elasticbeanstalk.CfnEnvironment(this, 'Environment', {
             environmentName: `${appName}-env`,
             applicationName: app.applicationName || appName,
-            solutionStackName: '64bit Amazon Linux 2 v5.6.4 running Node.js 16',
+            solutionStackName: config.BEAKSTALK_SOLUTION,
             optionSettings: optionSettingProperties,
             versionLabel: appVersionProps.ref,
         });
