@@ -239,7 +239,7 @@ export class CdkEbInfraStack extends cdk.Stack {
         const ebEnv = new cdk.aws_elasticbeanstalk.CfnEnvironment(this, 'Environment', {
             environmentName: `${appName}-env`,
             applicationName: app.applicationName || appName,
-            solutionStackName: config.BEAKSTALK_SOLUTION,
+            solutionStackName: config.BEANSTALK_SOLUTION,
             optionSettings: optionSettingProperties,
             versionLabel: appVersionProps.ref,
         });

@@ -6,13 +6,13 @@
       "webAppDomain" : "sample-domain-showcase.auth.us-east-1.amazoncognito.com",
       "mandatorySignIn": false,
       "cookieStorage": {
-        "domain": "sample-domain-showcase/",
+        "domain": "localhost:3000/",
         "path": "/",
         "expires": 365,
         "secure": true
       },
-      "redirectSignIn": "https://dhfg5x10pdi4c.cloudfront.net/",
-      "redirectSignOut": "https://dhfg5x10pdi4c.cloudfront.net/"
+      "redirectSignIn": "http://localhost:3000/",
+      "redirectSignOut": "http://localhost:3000/"
     },
     "API": {
       "endpoints": [

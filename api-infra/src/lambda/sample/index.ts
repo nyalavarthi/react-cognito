@@ -29,7 +29,6 @@ export async function main(
 * @param {any}  event - api event
 **/
 async function sampleService(event: any) {
-    var records
     var token = Utils.getDecodedToken(event.headers.Authorization)
     let logData = { 'api': event.resource, 'user': token?.email }
     logger.info(JSON.stringify(logData))
@@ -42,5 +41,5 @@ async function sampleService(event: any) {
         logger.error(`error getting customerList for user ${token?.email}`, _a);
         return Utils.message('error getting customerList: ' + _a, 500, event.headers.origin)
     }
-    return Utils.message(records, 200, event.headers.origin)
+    return Utils.message(event.headers, 200, event.headers.origin)
 }

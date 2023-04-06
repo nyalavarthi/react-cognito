@@ -70,12 +70,12 @@ export class ApiStack extends cdk.Stack {
                 cdk.aws_lambda.Runtime.NODEJS_16_X,
             ],
             code: cdk.aws_lambda.Code.fromAsset('./src/layers'),
-            description: 'Neptune database classes',
+            description: 'Sample database classes',
         });
 
 
         // utils lambda
-        const sampleSvc = new cdk.aws_lambda_nodejs.NodejsFunction(this, 'utilsHandler', {
+        const sampleSvc = new cdk.aws_lambda_nodejs.NodejsFunction(this, 'sampleHandler', {
             runtime: cdk.aws_lambda.Runtime.NODEJS_16_X,    // execution environment
             entry: path.join(__dirname, `../../src/lambda/sample/index.ts`),
 
@@ -274,13 +274,14 @@ export class ApiStack extends cdk.Stack {
             name: 'wsxAuthorizer',
             type: 'COGNITO_USER_POOLS',
             identitySource: 'method.request.header.Authorization',
-            providerArns: [cdk.Fn.importValue('sample-cognito-userpool-arn')],
+            //providerArns: [cdk.Fn.importValue('sample-cognito-userpool-arn')],
+            providerArns: [config.WSX_COGNITO_POOL_ARN],
         })
 
-        const listsystemusers = api.root.addResource('listsystemusers');
-        const listsystemusersIntegration = new cdk.aws_apigateway.LambdaIntegration(sampleSvc, {
+        const sampleService = api.root.addResource('sampleService');
+        const lsampleServiceIntegration = new cdk.aws_apigateway.LambdaIntegration(sampleSvc, {
         });
-        listsystemusers.addMethod('GET', listsystemusersIntegration, {
+        sampleService.addMethod('GET', lsampleServiceIntegration, {
             authorizationType: cdk.aws_apigateway.AuthorizationType.COGNITO,
             authorizer: { authorizerId: authorizer.ref }
         });
