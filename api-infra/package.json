@@ -28,6 +28,7 @@
     "@aws-sdk/node-http-handler": "^3.32.0",
     "@aws-sdk/types": "^3.32.0",
     "aws-cdk-lib": "^2.53.0",
+    "aws-sdk": "^2.1243.0",
     "constructs": "^10.0.0",
     "fs": "^0.0.1-security",
     "gremlin": "^3.6.1",
