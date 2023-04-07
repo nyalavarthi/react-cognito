@@ -3,7 +3,7 @@
       "endpoints": [
         {
           "name": "SampleAPI",
-          "endpoint": "https://6ezo0x6mj8.execute-api.us-east-1.amazonaws.com/prod"
+          "endpoint": "https://awfsgqak45.execute-api.us-east-1.amazonaws.com/prod"
         }
       ]
     },
