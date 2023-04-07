@@ -36,12 +36,19 @@ phases:
       - printf "\n\n"
 
       - echo "Installing cognito"
-      - cd ../../../ # for some reason popd throws error on build server
+      - cd ../../../
       - pwd
       - pushd ./cognito-infra/src/cdk
       - pwd
       - npm install aws-cdk-lib
       - cdk deploy CognitoStack --require-approval never
+      - printf "\n\n"
+
+      - echo "Installing api-infra"
+      - cd ../../../
+      - pwd
+      - pushd ./api-infra/cdk
+      - cdk deploy ApiStack --require-approval never
       - printf "\n\n"
 
 cache:
