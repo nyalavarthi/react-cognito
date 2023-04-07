@@ -1,41 +1,11 @@
 import JwtPayload from './JwtPayload'
 import jwt_decode from 'jwt-decode';
 
-export const ALLOWED_SPECIAL_CHARS = ' -_.*$@!&%()+?,'
-export const VA_DOMAIN = 'https://prod.wed.vaec.va.gov'
-export const WSX_DOMAINS = ['https://wsx.awesomedomain.info', 'http://localhost:3000', VA_DOMAIN, '*.amazoncognito.com']
+export const CF_DOMAIN = 'https://dhfg5x10pdi4c.cloudfront.net/'
+export const WSX_DOMAINS = [CF_DOMAIN, 'http://localhost:3000', '*.amazoncognito.com']
 
 export default class Utils {
-    /**
-     * 
-     * @param input 
-     * @returns 
-     */
-    static addKey(input: any) {
-        //if input is not undefined 
-        if (input.data.workstreams) {
-            for (let i = 0; i < input.workstreams.data.length; i++) {
-                input.workstreams.data[i].workstream.key = i;
-            }
-        }
-        else if (input.data) {
-            if (input.data > 0 && input.data[0]?.concern) {
-                for (let i = 0; i < input.data.length; i++) {
-                    input.data[i].concern.key = i;
-                }
-            } else {
-                for (let i = 0; i < input.data.length; i++) {
-                    input.data[i].key = i;
-                }
-            }
-        } else if (input) {
-            for (let i = 0; i < input.length; i++) {
-                input[i].key = i;
-            }
-        }
-        var output = input
-        return output;
-    }
+
 
     static getDecodedToken(token: string) {
         const decoded: JwtPayload = jwt_decode(token);
@@ -49,7 +19,7 @@ export default class Utils {
      * @returns 
      */
     static message(str: any, statusCode: number, origin: any) {
-        var allowedDomain = VA_DOMAIN //VA's dmain is the default
+        var allowedDomain = CF_DOMAIN //VA's dmain is the default
         if (WSX_DOMAINS.indexOf(origin) > -1) {
             allowedDomain = origin
         } else {
@@ -76,16 +46,7 @@ export default class Utils {
         };
         return response;
     }
-    /**
-     * 
-     * @param x 
-     * @param min 
-     * @param max 
-     * @returns 
-     */
-    static inRange(x: number, min: number, max: number) {
-        return ((x - min) * (x - max) <= 0);
-    }
+
 
     /**
      * 
@@ -96,8 +57,8 @@ export default class Utils {
     static jsonLogData(event: any, user: string) {
         let logData = {
             'api': event.resource, 'user': user, 'sourceIp': event.requestContext.identity.sourceIp,
-            'requestTime': event.requestContext.requestTime, 'origin' : event.headers.origin,
-            'userAgent' : event.requestContext.identity.userAgent
+            'requestTime': event.requestContext.requestTime, 'origin': event.headers.origin,
+            'userAgent': event.requestContext.identity.userAgent
         }
         return JSON.stringify(logData)
     }
