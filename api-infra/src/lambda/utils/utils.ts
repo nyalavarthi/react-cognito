@@ -2,7 +2,7 @@ import JwtPayload from './JwtPayload'
 import jwt_decode from 'jwt-decode';
 
 //CORS settings
-export const CF_DOMAIN = 'https://dhfg5x10pdi4c.cloudfront.net/'
+export const CF_DOMAIN = 'https://dhfg5x10pdi4c.cloudfront.net'
 export const ALLOWED_DOMAINS = [CF_DOMAIN, 'http://localhost:3000', '*.amazoncognito.com']
 /**
  * Util class
