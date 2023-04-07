@@ -59,6 +59,7 @@ export class CognitoStack extends cdk.Stack {
 
     const clientWriteAttributes = new cognito.ClientAttributes()
       .withStandardAttributes({
+        ...standardCognitoAttributes,
         emailVerified: false,
         phoneNumberVerified: false,
       })
