@@ -10,6 +10,6 @@ interface User {
  * Sample class
  */
 export const user: User = {
-  name: "Hayes",
+  name: "John Doe",
   id: 0,
 };

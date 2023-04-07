@@ -7,7 +7,7 @@ const logLevel = process.env.LOG_LEVEL;
 const logger = new Log(String(logLevel))
 
 /**
- * 
+ * lambda handler function
  * @param event 
  * @returns 
  */
@@ -25,7 +25,7 @@ export async function main(
 }
 
 /**
-* Sample API
+* Sample API that returns event headers back 
 * @param {any}  event - api event
 **/
 async function sampleService(event: any) {

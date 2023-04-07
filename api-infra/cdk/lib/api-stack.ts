@@ -76,7 +76,7 @@ export class ApiStack extends cdk.Stack {
         });
 
 
-        // utils lambda
+        // sample lambda
         const sampleSvc = new cdk.aws_lambda_nodejs.NodejsFunction(this, 'sampleHandler', {
             runtime: cdk.aws_lambda.Runtime.NODEJS_16_X,    // execution environment
             entry: path.join(__dirname, `../../src/lambda/sample/index.ts`),
@@ -270,7 +270,7 @@ export class ApiStack extends cdk.Stack {
             resourceArn: cfnWebACL.attrArn,
         })
 
-        // api authorizer using Cognito userpool
+        // API Gateway activates the authorizer when a client calls those methods. we are using Cognito pool for authorization
         const authorizer = new cdk.aws_apigateway.CfnAuthorizer(this, 'cfnAuth', {
             restApiId: api.restApiId,
             name: 'Authorizer',
