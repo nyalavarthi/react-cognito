@@ -35,14 +35,6 @@ phases:
       - cdk deploy --require-approval never
       - printf "\n\n"
 
-      - echo "Installing api-infra"
-      - cd ../../../
-      - pwd
-      - pushd ./api-infra
-      - pwd
-      - cdk deploy ApiStack --require-approval never
-      - printf "\n\n"
-
       - echo "Installing cognito"
       - cd ../../../
       - pwd
@@ -52,7 +44,13 @@ phases:
       - cdk deploy CognitoStack --require-approval never
       - printf "\n\n"
 
-      
+      - echo "Installing api-infra"
+      - cd ../../../
+      - pwd
+      - pushd ./api-infra/cdk
+      - pwd
+      - cdk deploy ApiStack --require-approval never
+      - printf "\n\n"
 
 cache:
   paths:
