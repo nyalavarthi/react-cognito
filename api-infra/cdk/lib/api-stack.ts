@@ -1,7 +1,9 @@
 import * as cdk from 'aws-cdk-lib';
 import * as config from "../../../environment-config";
 import * as path from 'path';
-
+/**
+ * CDK code to create Lambda, API gateway WAF, and Lambda authorizer  
+ */
 export class ApiStack extends cdk.Stack {
 
     constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -97,7 +99,7 @@ export class ApiStack extends cdk.Stack {
             logRetention: cdk.aws_logs.RetentionDays.ONE_YEAR,
         });
 
-        
+
         //add CW log grups for API gateway
         const samplelogGroup = new cdk.aws_logs.LogGroup(this, 'WSXAPILogGroup', { retention: cdk.aws_logs.RetentionDays.ONE_YEAR });
 

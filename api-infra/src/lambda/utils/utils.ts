@@ -3,16 +3,22 @@ import jwt_decode from 'jwt-decode';
 
 export const CF_DOMAIN = 'https://dhfg5x10pdi4c.cloudfront.net/'
 export const WSX_DOMAINS = [CF_DOMAIN, 'http://localhost:3000', '*.amazoncognito.com']
-
+/**
+ * Util class
+ */
 export default class Utils {
 
-
+    /**
+     * 
+     * @param token decodes JWT token
+     * @returns 
+     */
     static getDecodedToken(token: string) {
         const decoded: JwtPayload = jwt_decode(token);
         return decoded
     }
     /**
-     * 
+     * creates response message for API's with all the needed headers
      * @param str 
      * @param statusCode 
      * @param origin 
@@ -49,7 +55,7 @@ export default class Utils {
 
 
     /**
-     * 
+     * creates log message in json format
      * @param event 
      * @param user 
      * @returns 
