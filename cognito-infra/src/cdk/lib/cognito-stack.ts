@@ -91,14 +91,14 @@ export class CognitoStack extends cdk.Stack {
 
     // Outputs
     new cdk.CfnOutput(this, 'cognito-userpool-export', {
-      exportName: 'wsx-cognito-userpool-arn',
+      exportName: 'cognito-userpool-arn',
       value: userPool.userPoolArn
     });
-    new cdk.CfnOutput(this, 'wsx-user-pool-export', {
+    new cdk.CfnOutput(this, 'user-pool-export', {
       exportName: 'cognito-userpool-client-id',
       value: userPoolClient.userPoolClientId
     });
-    new cdk.CfnOutput(this, 'wsx-cognito-domain-name-export', {
+    new cdk.CfnOutput(this, 'cognito-domain-name-export', {
       exportName: 'cognito-userpool-domain-name',
       value: cognitoDomain.domainName
     });

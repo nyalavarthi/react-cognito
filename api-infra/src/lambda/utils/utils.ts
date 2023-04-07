@@ -1,8 +1,9 @@
 import JwtPayload from './JwtPayload'
 import jwt_decode from 'jwt-decode';
 
+//CORS settings
 export const CF_DOMAIN = 'https://dhfg5x10pdi4c.cloudfront.net/'
-export const WSX_DOMAINS = [CF_DOMAIN, 'http://localhost:3000', '*.amazoncognito.com']
+export const ALLOWED_DOMAINS = [CF_DOMAIN, 'http://localhost:3000', '*.amazoncognito.com']
 /**
  * Util class
  */
@@ -26,7 +27,7 @@ export default class Utils {
      */
     static message(str: any, statusCode: number, origin: any) {
         var allowedDomain = CF_DOMAIN //VA's dmain is the default
-        if (WSX_DOMAINS.indexOf(origin) > -1) {
+        if (ALLOWED_DOMAINS.indexOf(origin) > -1) {
             allowedDomain = origin
         } else {
             console.log('Origin not matched ', origin)

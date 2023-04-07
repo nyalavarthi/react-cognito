@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as config from "../../../environment-config";
 import * as path from 'path';
 /**
- * CDK code to create Lambda, API gateway WAF, and Lambda authorizer  
+ * CDK code to create Lambda, API gateway WAF, and Lambda authorizer
  */
 export class ApiStack extends cdk.Stack {
 
@@ -101,7 +101,7 @@ export class ApiStack extends cdk.Stack {
 
 
         //add CW log grups for API gateway
-        const samplelogGroup = new cdk.aws_logs.LogGroup(this, 'WSXAPILogGroup', { retention: cdk.aws_logs.RetentionDays.ONE_YEAR });
+        const samplelogGroup = new cdk.aws_logs.LogGroup(this, 'APILogGroup', { retention: cdk.aws_logs.RetentionDays.ONE_YEAR });
 
         //following way we can add multiple Lambda's to a single API.
         const api = new cdk.aws_apigateway.RestApi(this, 'sample-api', {
@@ -250,7 +250,7 @@ export class ApiStack extends cdk.Stack {
         webAclAssociation.addDependsOn(cfnWebACL)
 
         //enable CW log grups for WAF  - LogGroup name must start with 'aws-waf-logs'
-        const waflogGroup = new cdk.aws_logs.LogGroup(this, 'WSXWAFAPILogGroup', {
+        const waflogGroup = new cdk.aws_logs.LogGroup(this, 'WAFAPILogGroup', {
             logGroupName: `aws-waf-logs-sample-api`, // Strange that the name need to start with 'aws-waf-logs' or else CDK will errorout
             retention: cdk.aws_logs.RetentionDays.ONE_YEAR
         });
@@ -273,11 +273,11 @@ export class ApiStack extends cdk.Stack {
         // api authorizer using Cognito userpool
         const authorizer = new cdk.aws_apigateway.CfnAuthorizer(this, 'cfnAuth', {
             restApiId: api.restApiId,
-            name: 'wsxAuthorizer',
+            name: 'Authorizer',
             type: 'COGNITO_USER_POOLS',
             identitySource: 'method.request.header.Authorization',
-            providerArns: [cdk.Fn.importValue('sample-cognito-userpool-arn')],
-            //providerArns: [config.WSX_COGNITO_POOL_ARN],
+            //providerArns: [cdk.Fn.importValue('sample-cognito-userpool-arn')],
+            providerArns: [config.COGNITO_POOL_ARN],
         })
 
         const sampleService = api.root.addResource('sampleService');

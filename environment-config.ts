@@ -22,4 +22,4 @@ export const LOG_LEVEL = 'DEBUG'
 export const API_WAF_NAME = 'sample-api-waf'
 export const BEANSTALK_SOLUTION = '64bit Amazon Linux 2 v5.7.0 running Node.js 16'
 export const COGNITO_USER_POOL_ID = 'us-east-1_fNB9bzL9h'
-export const WSX_COGNITO_POOL_ARN = 'arn:aws:cognito-idp:us-east-2:'+ACCOUNT+':userpool/'+COGNITO_USER_POOL_ID
+export const COGNITO_POOL_ARN = 'arn:aws:cognito-idp:us-east-2:'+ACCOUNT+':userpool/'+COGNITO_USER_POOL_ID
