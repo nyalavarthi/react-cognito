@@ -45,9 +45,16 @@ export class CognitoStack extends cdk.Stack {
     //enable 'Audit Only' advanced security feature , this will emt metrics to CW logs ( IMP this feature is not supported in GOV cloud)
     //const cfnPool = userPool.node.defaultChild as cognito.CfnUserPool;
     //cfnPool.userPoolAddOns = { advancedSecurityMode: "AUDIT" };
-
+    // User Pool Client attributes
+    const standardCognitoAttributes = {
+      givenName: true,
+      familyName: true,
+      email: true,
+      emailVerified: true
+    };
 
     const clientReadAttributes = new cognito.ClientAttributes()
+      .withStandardAttributes(standardCognitoAttributes)
       .withCustomAttributes(...['groups']);
 
     const clientWriteAttributes = new cognito.ClientAttributes()

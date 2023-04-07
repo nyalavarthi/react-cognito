@@ -274,8 +274,8 @@ export class ApiStack extends cdk.Stack {
             name: 'wsxAuthorizer',
             type: 'COGNITO_USER_POOLS',
             identitySource: 'method.request.header.Authorization',
-            //providerArns: [cdk.Fn.importValue('sample-cognito-userpool-arn')],
-            providerArns: [config.WSX_COGNITO_POOL_ARN],
+            providerArns: [cdk.Fn.importValue('sample-cognito-userpool-arn')],
+            //providerArns: [config.WSX_COGNITO_POOL_ARN],
         })
 
         const sampleService = api.root.addResource('sampleService');
