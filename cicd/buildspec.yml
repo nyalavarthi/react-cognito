@@ -47,8 +47,9 @@ phases:
       - echo "Installing api-infra"
       - cd ../../../
       - pwd
-      - pushd ./api-infra/cdk
+      - pushd ./api-infra
       - pwd
+      - npm install aws-cdk-lib
       - cdk deploy ApiStack --require-approval never
       - printf "\n\n"
 
