@@ -15,15 +15,21 @@ AWS Elastic Beanstalk automates the details of capacity provisioning, load balan
 
 ### Repository details
 This repository consists of multiple sub-projects, which are listed below:
-### api-infra
-Creates backend services such as API Gateway, Lambda, & WAF
-### cognito-infra
-Creates AWS Cognito user pool
-### ebs-infra
-Creates ElasticBeanstalk instance , builds, and deployes the front-end application  
-### s3-infra
-Creates an S3 bucket for hosting React code, creates a CloudFront distribution (with OAI), and copies the code into the S3 hosting bucket.
-### web
-Contains React front-end code
-### cicd
-Contains Cloudformation templates to create CodePipeline and CodeBuild projects for CICD
+
+* ### api-infra
+    Backend services such as API Gateway, Lambda, and WAF are created using AWS CDK.
+
+* ### cognito-infra
+    AWS Cognito Userpool is created using AWS CDK.
+
+* ### ebs-infra
+    Creates ElasticBeanstalk managed instances, ALB, autoscalling groups, builds, and deployes the front-end application
+
+* ### s3-infra
+    This project creates an S3 bucket to host React code, sets up a CloudFront distribution (with OAI), and transfers the code into the S3 hosting bucket.
+
+* ### web
+    Contains React front-end code
+
+* ### cicd
+    Contains Cloudformation templates to create CodePipeline and CodeBuild projects for CICD
