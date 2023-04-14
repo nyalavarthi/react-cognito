@@ -70,9 +70,7 @@ function App() {
       *
       */}
       <header className="App-header">
-        <p>
-          Hello <b>{userData.attributes ? userData.attributes.given_name : ''} </b> , Welcome to Sample ReactJS and Cognito application
-        </p>
+       
         {!userData.attributes ?
           <a
             className="App-link"
@@ -89,15 +87,17 @@ function App() {
                   variant="h2"
                   description=""
                 >
-                  Response headers from API
+                 Hello <b>{userData.attributes ? userData.attributes.given_name : ''} </b> , Welcome to Sample ReactJS and Cognito application
                 </Header>
               }
             >
+     
+              <h3> Response headers from API</h3>
               <b>Origin</b> : {host ? host : 'loading'}<br />
               <b>User-Agent</b> : {browser ? browser : 'loading'}<br />
             </Container>
             <br />
-            <Button variant="primary" onClick={CognitoService.handleSignOut}>Logout</Button>
+            <Button className="button-layout" variant="primary" onClick={CognitoService.handleSignOut}>Logout</Button>
           </div>
         }
       </header>
