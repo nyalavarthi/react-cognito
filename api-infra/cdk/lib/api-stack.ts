@@ -82,7 +82,7 @@ export class ApiStack extends cdk.Stack {
         lambdaSG.addIngressRule(
             cdk.aws_ec2.Peer.ipv4(vpc.vpcCidrBlock),
             cdk.aws_ec2.Port.allTraffic(),
-            'allow SSH access from anywhere',
+            'allow all access from with in VPC',
         );
 
         const subnetIds = [
