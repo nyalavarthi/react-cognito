@@ -1,6 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
 import * as config from "../../../environment-config";
 import * as path from 'path';
+import { NagSuppressions } from 'cdk-nag'
+
 /**
  * CDK code to create Lambda, API gateway WAF, and Lambda authorizer
  */
@@ -8,6 +10,35 @@ export class ApiStack extends cdk.Stack {
 
     constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
+
+        //suppress CDK NAG errors ( if neeed)
+        NagSuppressions.addStackSuppressions(this, [
+            {
+                id: 'AwsSolutions-IAM4',
+                reason: 'Allow managed policies'
+            },
+            {
+                id: 'AwsSolutions-IAM5',
+                reason: 'Allow policy for all Lambdas that matches certain Tag'
+            },
+            {
+                id: 'AwsSolutions-APIG2',
+                reason: 'Request validation is handled in Lambda'
+            },
+            {
+                id: 'AwsSolutions-COG4',
+                reason: 'Cognito pool authorizer is added to API method'
+            },
+            {
+                id: 'AwsSolutions-APIG4',
+                reason: 'Cognito pool authorizer is added to API method'
+            },
+            {
+                id: 'AwsSolutions-APIG6',
+                reason: 'CW logs are enabled at API level'
+            },
+        ])
+
         //vpc lookup 
         const vpc = cdk.aws_ec2.Vpc.fromLookup(this, 'VPC', {
             vpcId: config.VPC_ID
@@ -22,11 +53,16 @@ export class ApiStack extends cdk.Stack {
             statements: [
                 new cdk.aws_iam.PolicyStatement({
                     effect: cdk.aws_iam.Effect.ALLOW,
-                    resources: ['*'],
+                    resources: [`arn:aws:lambda:${config.REGION}:${config.ACCOUNT}:function:*`],
                     actions: [
                         'cognito-idp:AdminAddUserToGroup',
                         'cognito-idp:AdminRemoveUserFromGroup'
-                    ]
+                    ],
+                    conditions: {
+                        "StringLike": {
+                            "lambda:ResourceTag/App": config.APP_TAG
+                        }
+                    }
                 })
             ]
         });
@@ -69,7 +105,7 @@ export class ApiStack extends cdk.Stack {
         // 👇 database lib layer
         const dataLayer = new cdk.aws_lambda.LayerVersion(this, 'neptune-layer', {
             compatibleRuntimes: [
-                cdk.aws_lambda.Runtime.NODEJS_16_X,
+                cdk.aws_lambda.Runtime.NODEJS_18_X,
             ],
             code: cdk.aws_lambda.Code.fromAsset('./src/layers'),
             description: 'Sample database classes',
@@ -78,7 +114,7 @@ export class ApiStack extends cdk.Stack {
 
         // sample lambda
         const sampleSvc = new cdk.aws_lambda_nodejs.NodejsFunction(this, 'sampleHandler', {
-            runtime: cdk.aws_lambda.Runtime.NODEJS_16_X,    // execution environment
+            runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,    // execution environment
             entry: path.join(__dirname, `../../src/lambda/sample/index.ts`),
 
             handler: 'main',  // file is "index", function is "handler"

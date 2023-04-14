@@ -28,6 +28,7 @@
     "aws-cdk": "^2.72.0",
     "aws-cdk-lib": "^2.72.0",
     "aws-sdk": "^2.1349.0",
+    "cdk-nag": "^2.25.9",
     "constructs": "^10.0.0",
     "fs": "^0.0.1-security",
     "gremlin": "^3.6.1",

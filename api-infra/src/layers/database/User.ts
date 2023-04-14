@@ -1,15 +1,22 @@
 /**
  * Sample database class shows how to use layers in Lambda
- */
-interface User {
-  name: string;
-  id: number;
-}
+ */class SampleUser {
 
-/**
- * Sample class
- */
-export const user: User = {
-  name: "John Doe",
-  id: 0,
-};
+  constructor() {
+  }
+
+    /**
+     * Sample get user function
+     * @returns JSON object
+     */
+    async getUser() {
+      return {
+        name : 'John Smith'
+      }
+      
+  }
+
+}
+export default SampleUser;
+
+

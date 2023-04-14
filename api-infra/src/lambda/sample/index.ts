@@ -1,4 +1,4 @@
-import * as sample from '/opt/database/User.ts'
+import SampleUser from '/opt/database/User.ts'
 import Utils from '../utils/utils';
 import { APIGatewayProxyResultV2 } from 'aws-lambda';
 import Log from './../utils/log'
@@ -25,7 +25,7 @@ export async function main(
 }
 
 /**
-* Sample API that returns event headers back 
+* Sample API that returns event headers back as response
 * @param {any}  event - api event
 **/
 async function sampleService(event: any) {
@@ -34,8 +34,9 @@ async function sampleService(event: any) {
     logger.info(JSON.stringify(logData))
     logger.debug(JSON.stringify(logData), JSON.stringify({ 'params': event.queryStringParameters }))
     try {
-        //check if Global entry exist
-       console.log('test')
+        //do nothing.
+        const user  = new SampleUser()
+        logger.debug('test ', await user.getUser())
     }
     catch (_a) {
         logger.error(`error getting customerList for user ${token?.email}`, _a);

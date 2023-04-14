@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import './App.css';
 import Container from "@cloudscape-design/components/container";
 import Header from "@cloudscape-design/components/header";
-
+import Button from "@cloudscape-design/components/button";
 import NavMenu from './components/nav/menu'
 import CognitoAuthService from './services/cognitoService'
 import apiConfig from './config/app-config.json'
@@ -15,14 +15,13 @@ function App() {
   const [userData, setUserData] = React.useState({});
   const [host, setHost] = React.useState([]);
   const [browser, setBrowser] = React.useState([]);
-
+  // onload of the pgae, validate token and get user's information from Cognito using Amplify library
+  // token is baing passed along with cognito redirect_url ( which in this case localhost:3000)
   useEffect(() => {
     CognitoService.getCurrentUser().then((result) => {
       console.log('user from session ', result)
       if (result) {
         console.log('attributes : ', result.attributes)
-        console.log('result.attributes.email ', result.attributes.given_name)
-        //setUser({ name: result.attributes.email, groups: result.attributes['custom:groups'], loggedIn: true })
         setUserData(result)
       }
       callChildFn(result);
@@ -35,7 +34,7 @@ function App() {
     })
       .catch(e => {
         console.error('API ERROR:', e)
-        //setDeleteMsg('Failed to add User , error : "' + e.message)       
+        //handle error.
       })
 
   }, []);
@@ -55,7 +54,6 @@ function App() {
     }
   }
 
-
   return (
     <div className="App">
 
@@ -66,7 +64,11 @@ function App() {
           role={userData.groups}
         />
       </div>
-
+      {/*
+      *  followig  code demonstrates how to display informaiton depending on users login status , 
+      *  here we made a backed API call after login and displaying http response headers upon successful login. 
+      *
+      */}
       <header className="App-header">
         <p>
           Hello <b>{userData.attributes ? userData.attributes.given_name : ''} </b> , Welcome to Sample ReactJS and Cognito application
@@ -91,23 +93,12 @@ function App() {
                 </Header>
               }
             >
-              <b>Origin</b> : {host ? host : 'loading'}<br/>
-              <b>User-Agent</b> : {browser ? browser : 'loading'}<br/>
+              <b>Origin</b> : {host ? host : 'loading'}<br />
+              <b>User-Agent</b> : {browser ? browser : 'loading'}<br />
             </Container>
-
-            <a
-              className="App-link"
-              href="#"
-              onClick={CognitoService.handleSignOut}
-              rel="noopener noreferrer"
-            >
-              <p> 
-              Logout
-              </p>
-            </a>
-
+            <br />
+            <Button variant="primary" onClick={CognitoService.handleSignOut}>Logout</Button>
           </div>
-
         }
       </header>
     </div>

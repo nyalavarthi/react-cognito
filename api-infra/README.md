@@ -1,14 +1,12 @@
-# Infrastructure project
+# AWS Backend Infrastructure project
 
 
-This project creates following AWS resources in your existing VPC,  follow the file react-cognito/environment-config.ts and update your VPC and Subnet, Cognito pool id information accordingly.
+This project uses AWS CDK to create the following AWS resources in your existing VPC. Please refer to the file react-cognito/environment-config.ts and update your VPC, Subnet, and Cognito pool ID information accordingly. Additionally, this project implements cdk-nag to check for rule violations and enforce best practices.
 
-
-1.	Amazon API Gateway
-2.	AWS Lambda’s
-3.	AWS WAF 
-4.	Amazon Cognito
-
+1. Amazon API Gateway
+2. AWS Lambda’s
+3. AWS WAF 
+4. CDK nag
 
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
