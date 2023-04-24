@@ -53,7 +53,7 @@ export class ApiStack extends cdk.Stack {
             statements: [
                 new cdk.aws_iam.PolicyStatement({
                     effect: cdk.aws_iam.Effect.ALLOW,
-                    resources: [`arn:aws:lambda:${config.REGION}:${config.ACCOUNT}:function:*`],
+                    resources: [`arn:aws:lambda:${config.REGION}:${cdk.Aws.ACCOUNT_ID}:function:*`],
                     actions: [
                         'cognito-idp:AdminAddUserToGroup',
                         'cognito-idp:AdminRemoveUserFromGroup'

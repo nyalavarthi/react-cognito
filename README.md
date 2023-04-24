@@ -23,10 +23,10 @@ This repository consists of multiple sub-projects, which are listed below:
     AWS Cognito Userpool is created using AWS CDK.
 
 * ### ebs-infra
-    Creates ElasticBeanstalk managed instances, ALB, autoscalling groups, builds, and deployes the front-end application
+    Creates ElasticBeanstalk managed instances, ALB, autoscalling groups, builds, and deployes the front-end application code onto managed EC2 instance(s) Beanstalk also manages patching of instances and instances are configured to use metadata V2 (IMDSv2)
 
 * ### s3-infra
-    This project creates an S3 bucket to host React code, sets up a CloudFront distribution (with OAI), and transfers the code into the S3 hosting bucket.
+    This project creates an S3 bucket to host React code, sets up a CloudFront distribution (with OAI), builds code and transfers the front-end artifacts into the S3 bucket.
 
 * ### web
     Contains React front-end code

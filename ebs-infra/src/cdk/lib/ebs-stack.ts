@@ -1,3 +1,7 @@
+/**
+ * CDK to deploy ElasticBeanstalk environment and deploys web app code
+ * Manages EC2 instances ( Patcheing & Updates ) 
+ */
 import * as cdk from 'aws-cdk-lib';
 import * as config from "../../../../environment-config";
 import archiver from 'archiver';
@@ -44,18 +48,23 @@ export class CdkEbInfraStack extends cdk.Stack {
         // Make sure that Elastic Beanstalk app exists before creating an app version
         appVersionProps.addDependsOn(app);
         // Create role and instance profile
-        const myRole = new cdk.aws_iam.Role(this, `${appName}-elasticbeanstalk-ec2-role`, {
+        const ebsInstanceRole = new cdk.aws_iam.Role(this, `${appName}-elasticbeanstalk-ec2-role`, {
             assumedBy: new cdk.aws_iam.ServicePrincipal('ec2.amazonaws.com'),
         });
         const managedPolicy = cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('AWSElasticBeanstalkWebTier');
-        myRole.addManagedPolicy(managedPolicy);
+        ebsInstanceRole.addManagedPolicy(managedPolicy);
         const myProfileName = `${appName}-InstanceProfile`;
         new cdk.aws_iam.CfnInstanceProfile(this, myProfileName, {
             instanceProfileName: myProfileName,
             roles: [
-                myRole.roleName
+                ebsInstanceRole.roleName
             ]
         });
+        const ebsAutoUpdateRole = new cdk.aws_iam.Role(this, `${appName}-elasticbeanstalk-mgmt-role`, {
+            assumedBy: new cdk.aws_iam.ServicePrincipal('managedupdates.elasticbeanstalk.amazonaws.com'),
+        });
+        const ebsManagedPolicy = cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy');
+        ebsAutoUpdateRole.addManagedPolicy(ebsManagedPolicy);
 
         // Create the Route 53 Hosted Zone
         const zone = new route53.HostedZone(this, "HostedZone", {
@@ -233,6 +242,11 @@ export class CdkEbInfraStack extends cdk.Stack {
                 optionName: "UpdateLevel",
                 value: "patch"
             },
+            {
+                namespace: "aws:elasticbeanstalk:environment",
+                optionName: "ServiceRole",
+                value: ebsAutoUpdateRole.roleId
+            }
         ];
 
         // Create an Elastic Beanstalk environment to run the application
