@@ -1,4 +1,5 @@
 
+
 //export const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000/";
 // This value is the output of S3 / cloudfront deployment ( Cloud front distribution URL)
 export const CLIENT_URL = process.env.CLIENT_URL || "https://dhfg5x10pdi4c.cloudfront.net/"; 
