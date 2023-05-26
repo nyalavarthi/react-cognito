@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+## Sample React - Amazon Cognito applicaiton
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The repository aims to showcase the process of building a React application that incorporates Amazon Cognito for authentication and authorization, along with deploying backend infrastructure to the AWS cloud through AWS CDK and AWS CodePipeline.
 
-## Available Scripts
+AWS API Gateway and AWS Lambda are utilized in this project to create backend microservices, which are safeguarded by AWS WAF.
 
-In the project directory, you can run:
+AWS CodeBuild and AWS CodePipeline can be utilized to enable the deployment of this application to AWS Cloud.
 
-### `npm start`
+There are two options available for deploying the frontend, which you can choose from.
+1. Serverless option using Amazon S3 and Amazon Cloudfront 
+2. EC2 instance using Amazon ElasticBeanstalk 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Deploying to an EC2 instance with Amazon ElasticBeanstalk is a useful approach in GovCloud since Amazon CloudFront is not accessible in GovCloud.
+AWS Elastic Beanstalk automates the details of capacity provisioning, load balancing, auto scaling, and application deployment.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Repository details
+This repository consists of multiple sub-projects, which are listed below:
 
-### `npm test`
+* ### api-infra
+    Backend services such as API Gateway, Lambda, and WAF are created using AWS CDK.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* ### cognito-infra
+    AWS Cognito Userpool is created using AWS CDK.
 
-### `npm run build`
+* ### ebs-infra
+    Creates ElasticBeanstalk managed instances, ALB, autoscalling groups, builds, and deployes the front-end application code onto managed EC2 instance(s) Beanstalk also manages patching of instances and instances are configured to use metadata V2 (IMDSv2)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* ### s3-infra
+    This project creates an S3 bucket to host React code, sets up a CloudFront distribution (with OAI), builds code and transfers the front-end artifacts into the S3 bucket.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* ### web
+    Contains React front-end code
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* ### cicd
+    Contains Cloudformation templates to create CodePipeline and CodeBuild projects for CICD

@@ -1,0 +1,26 @@
+{
+    "Auth": {
+      "region": "us-east-1",
+      "userPoolId": "us-east-1_fNB9bzL9h",
+      "userPoolWebClientId": "6kmhhjuq45o1pkt6vrdbtbb320",
+      "webAppDomain" : "sample-domain-showcase.auth.us-east-1.amazoncognito.com",
+      "mandatorySignIn": false,
+      "cookieStorage": {
+        "domain": "localhost:3000/",
+        "path": "/",
+        "expires": 365,
+        "secure": true
+      },
+      "redirectSignIn": "http://localhost:3000/",
+      "redirectSignOut": "http://localhost:3000/"
+    },
+    "API": {
+      "endpoints": [
+        {
+          "name": "sample",
+          "endpoint": "http://---/api"
+        }
+      ]
+    }
+  }
+  

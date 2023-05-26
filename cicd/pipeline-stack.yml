@@ -234,7 +234,7 @@ Resources:
               InputArtifacts:
                 - Name: SourceArtifact
 
-  # CodeBuild project to run all wsx CDK stacks
+  # CodeBuild project to run all  CDK stacks
   rSampleEnvDeployProject:
     Type: AWS::CodeBuild::Project
     Properties:
