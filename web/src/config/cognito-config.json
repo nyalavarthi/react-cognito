@@ -1,9 +1,9 @@
 {
     "Auth": {
       "region": "us-east-2",
-      "userPoolId": "us-east-2_qmxooPsyw",
-      "userPoolWebClientId": "4l6kcg0pmc2aote70gvomrse4s",
-      "webAppDomain" : "sample-domain-showcase.auth.us-east-2.amazoncognito.com",
+      "userPoolId": "",
+      "userPoolWebClientId": "",
+      "webAppDomain" : "",
       "mandatorySignIn": false,
       "cookieStorage": {
         "domain": "localhost:3000/",
